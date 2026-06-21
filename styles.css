@@ -52,6 +52,26 @@ h2 {
   transition: background-color 0.3s;
 }
 
+.cartProduct {
+  background-color: #333333;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.cartProduct button {
+  background-color: #ff0000;
+  border: none;
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
 .product button:hover {
   background-color: #3700b3;
 }
