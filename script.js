@@ -13,7 +13,7 @@ addEventListener("DOMContentLoaded", () => {
     { id: 2, name: "Product 2", price: 19.99 },
     { id: 3, name: "Product 3", price: 29.99 },
   ];
-  let cart = [];
+  let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
   function renderProductsList(product) {
     const productDiv = document.createElement("div");
@@ -28,6 +28,7 @@ addEventListener("DOMContentLoaded", () => {
 
     button.addEventListener("click", () => {
       cart.push(product);
+      saveCart()
       renderCartList();
     });
   }
@@ -35,6 +36,7 @@ addEventListener("DOMContentLoaded", () => {
   products.forEach((product) => {
     renderProductsList(product);
   });
+  renderCartList();
 
   function renderCartList() {
     cartItems.innerHTML = "";
@@ -43,15 +45,25 @@ addEventListener("DOMContentLoaded", () => {
     if (cart.length > 0) {
       emptyCart.classList.add("hidden");
       cartTotal.classList.remove("hidden");
-      cart.forEach((item) => {
+      cart.forEach((item, index) => {
         const cartItem = document.createElement("div");
+        cartItem.classList.add("cartProduct");
         cartItem.innerHTML = `
         ${item.name} - $${item.price.toFixed(2)}
         `;
+        const cartItemDeleteBtn = document.createElement("button");
+        cartItemDeleteBtn.textContent = "Delete Item";
+        cartItem.appendChild(cartItemDeleteBtn);
         cartItems.appendChild(cartItem);
         total += item.price;
+
+        cartItemDeleteBtn.addEventListener("click", () => {
+          cart.splice(index, 1)
+          saveCart()
+          renderCartList()
+        })
       });
-      totalPrice.innerHTML = `$${total.toFixed(2)}`;
+      totalPrice.textContent = `$${total.toFixed(2)}`;
     } else {
       cartItems.innerHTML = "<p>Your cart is empty.</p>";
       cartTotal.classList.add("hidden");
@@ -59,8 +71,15 @@ addEventListener("DOMContentLoaded", () => {
   }
 
   checkoutBtn.addEventListener("click", () => {
-    alert(`Checked out successfully!\n\nTotal Items - ${cart.length}\nTotal amount: $${total.toFixed(2)}`);
-    cart = [];
+    alert(
+      `Checked out successfully!\n\nTotal Items - ${cart.length}\nTotal amount: $${total.toFixed(2)}`,
+    );
+    cart.length = 0;
+    saveCart()
     renderCartList();
   });
+
+  function saveCart() {
+    localStorage.setItem("cartItems", JSON.stringify(cart))
+  }
 });
